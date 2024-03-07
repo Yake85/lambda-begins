@@ -4,7 +4,7 @@ from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.metrics import MetricUnit
 import json
 import boto3
-
+import os
 
 logger = Logger(service="APP")
 tracer = Tracer(service="APP")
@@ -36,8 +36,31 @@ def hello():
         'statusCode': 200,
         'body': bucket_names
     }
-    #for bucket in s3.buckets.all():
-    #   print(bucket.name)
+
+@app.get("/ec2")
+@tracer.capture_method
+def hello_ec2():
+    tracer.put_annotation(key="User", value="region")
+    logger.info(f"Request from region received")
+    metrics.add_metric(name="SuccessfulRegion", unit=MetricUnit.Count, value=1)
+    region = os.environ['REGION']
+    ec2_client = boto3.client('ec2', region_name=region)
+    response = ec2_client.describe_instances()
+    instance_info = []
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            instance_info.append({
+                'InstanceId': instance['InstanceId'],
+                'InstanceType': instance['InstanceType'],
+                'State': instance['State']['Name'],
+                'Name': instance['KeyName']
+            })
+    
+    # Retornando la información de las instancias EC2
+    return {
+        'statusCode': 200,
+        'body': instance_info
+    }
     
 
 @tracer.capture_lambda_handler

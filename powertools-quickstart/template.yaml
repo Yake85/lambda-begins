@@ -12,11 +12,19 @@ Resources:
             Handler: app.lambda_handler
             Runtime: python3.11
             Tracing: Active
+            Environment:
+                Variables:
+                    REGION: !Ref AWS::Region
             Events:
                 HelloWorld:
                     Type: Api
                     Properties:
                         Path: /hello
+                        Method: get
+                HelloEc2:
+                    Type: Api
+                    Properties:
+                        Path: /ec2
                         Method: get
                 HelloWorldName:
                     Type: Api
