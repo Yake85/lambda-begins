@@ -19,7 +19,7 @@ Resources:
                 HelloWorld:
                     Type: Api
                     Properties:
-                        Path: /hello
+                        Path: /s3
                         Method: get
                 HelloEc2:
                     Type: Api
@@ -58,4 +58,4 @@ Resources:
 Outputs:
     HelloWorldApi:
         Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-        Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+        Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

@@ -21,7 +21,7 @@ def hello_name(name):
     return {"message": f"hello {name}!"}
 
 
-@app.get("/hello")
+@app.get("/s3")
 @tracer.capture_method
 def hello():
     tracer.put_annotation(key="User", value="unknown")
